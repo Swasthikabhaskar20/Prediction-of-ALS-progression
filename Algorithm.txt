@@ -1,0 +1,32 @@
+#Algorithm : Stacking Multi-Model Regressor.
+Input: 
+Training Dataset TD=(A_train,B_train)
+Base Regressor Models: 〖{BR〗_1,〖BR〗_2 〖,…,BR〗_n}
+Meta-Model: S_f
+k-folds cross-validation
+
+Output:
+Final Prediction B_test
+
+Step:1
+Initialize empty matrix M of size (x,y)for out-of-fold prediction
+Step:2
+Split A_train into k-folds
+Step:3
+For each base model 〖BR〗_i in 〖{BR〗_1,〖BR〗_2,…,〖BR〗_n}:
+     For each fold (A_train_fold ,B_train_fold,A_validation_fold,B_validation_fold):
+           Train M_i on (A_train_fold,B_train_fold )
+            Predict B_pred on A_validation_fold
+            Store B_prediction in M for the corresponding fold.
+Step:4
+Train Meta-Model  S_f   using M as input and B_train as target.
+Step:5
+Train all base modes 〖BR〗_i on full  A_train
+Step:6
+Predict using all base models on A_test
+Step:7
+Using the predictions of base models as input to S_f
+Step:8
+Predict final B_test using S_f
+Step:9	
+Return final predictions B_test
