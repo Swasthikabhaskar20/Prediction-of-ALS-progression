@@ -43,6 +43,16 @@ Output: Trained model file and printed evaluation metrics.<BR>
 
 
 # 5.Usage Instructions – How to use or load the dataset and code
+# Load the dataset
+import pandas as pd
+
+# Specify the correct file path
+file_path = 'C:/Users/swast/ALS.csv'
+
+# Try reading with 'latin1' encoding
+data = pd.read_csv(file_path, encoding='latin1')
+
+# 6. Requirements – Any dependencies (e.g., Python libraries).
 # Import necessary libraries
 
 import pandas as pd <br>
@@ -59,13 +69,30 @@ from sklearn.decomposition import PCA<br>
 from sklearn.preprocessing import StandardScaler<br>
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score<br>
 from xgboost import XGBRegressor<br>
+from sklearn.preprocessing import LabelEncoder
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Specify the correct file path
-file_path = 'C:/Users/swast/ALS.csv'
+# Any dependencie
+Programming Language:
 
-# Try reading with 'latin1' encoding
-data = pd.read_csv(file_path, encoding='latin1')
+Python 3.8 or later
 
+Required Libraries:
+
+pandas – for data manipulation and analysis
+
+numpy – for numerical computing
+
+matplotlib – for plotting and visualization
+
+lime – for model interpretability using LIME (Local Interpretable Model-agnostic Explanations)
+
+scikit-learn – for preprocessing, model training, evaluation, and decomposition
+
+xgboost – for gradient boosting regression models
+
+# 7. Methodology (if applicable) – Steps taken for data processing.
 # Preprocessing
 labelencoder is used for converting categorical columns to numerical values.
 Non-numeric entries is changed to numberic values(eg:"-").
@@ -75,6 +102,69 @@ le = LabelEncoder()
 
 # Fit and transform the 'Site_of_Onset' column to numeric values
 df['Site_of_Onset'] = le.fit_transform(df['Site_of_Onset'])
+
+
+# Fit and transform the 'Site_of_Onset' column to numeric values
+df['Cohort'] = le.fit_transform(df['Cohort'])
+
+
+df['Lenght_Diag_LNA'] = pd.to_numeric(df['Lenght_Diag_LNA'], errors='coerce')
+
+# Calculate the average of non-missing values
+non_missing_avg = df['Lenght_Diag_LNA'].dropna().mean()
+
+# Replace NaN (originally '-') with the rounded average
+df['Lenght_Diag_LNA'] = df['Lenght_Diag_LNA'].fillna(round(non_missing_avg))
+
+# Display the updated DataFrame
+df
+# Drop unneccessary columns
+df.drop(columns=['SubjectUID'], inplace=True)
+df.drop(columns=['Unnamed: 15'], inplace=True)
+
+average_length = df['Lenght_Diag_LNA'].mean()
+
+# Replace NaN with the rounded average
+df['Lenght_Diag_LNA'] = df['Lenght_Diag_LNA'].fillna(round(average_length))
+
+# Display the updated DataFrame
+df
+
+df['Diagdt'] = pd.to_numeric(df['Diagdt'], errors='coerce')
+
+# Calculate the average of non-missing values
+non_missing_avg = df['Diagdt'].dropna().mean()
+
+# Replace NaN (originally '-') with the rounded average
+df['Diagdt'] = df['Diagdt'].fillna(round(non_missing_avg))
+
+
+df['Age at Symptons Onset'] = pd.to_numeric(df['Age at Symptons Onset'], errors='coerce')
+
+# Calculate the average of non-missing values
+non_missing_avg = df['Age at Symptons Onset'].dropna().mean()
+
+# Replace NaN (originally '-') with the rounded average
+df['Age at Symptons Onset'] = df['Age at Symptons Onset'].fillna(round(non_missing_avg))
+
+# Display the updated DataFrame
+df['Site_of_Onset'] = pd.to_numeric(df['Site_of_Onset'], errors='coerce')
+
+# Calculate the average of non-missing values
+non_missing_avg = df['Site_of_Onset'].dropna().mean()
+
+# Replace NaN (originally '-') with the rounded average
+df['Site_of_Onset'] = df['Site_of_Onset'].fillna(round(non_missing_avg))
+
+# Display the updated DataFrame
+
+
+
+plt.figure(figsize=(8,6))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm', fmt=".2f")
+plt.title("Correlation Matrix Heatmap")
+plt.show()
+
 
 Fills Nan values with average values to clean the dataset.
 
@@ -123,7 +213,7 @@ model.fit(X, y)<br>
 feature_importance = pd.Series(model.feature_importances_, index=X.columns)<br>
 selected_features = feature_importance.nlargest(10).index.tolist()<br>
 print("Selected Features:", selected_features)<br>
-
+# 7. Methodology (if applicable) – Steps taken for modeling. 
 # Train Model
 # Define base models
 rf = RandomForestRegressor(n_estimators=100, max_depth=4, min_samples_split=10, 
@@ -184,24 +274,6 @@ explanation = explainer.explain_instance(
     stacking.predict,  # The trained model's predict function
     num_features=10  # Number of top influential features
 )
-# 6.Requirements – Any dependencie
-Programming Language:
-
-Python 3.8 or later
-
-Required Libraries:
-
-pandas – for data manipulation and analysis
-
-numpy – for numerical computing
-
-matplotlib – for plotting and visualization
-
-lime – for model interpretability using LIME (Local Interpretable Model-agnostic Explanations)
-
-scikit-learn – for preprocessing, model training, evaluation, and decomposition
-
-xgboost – for gradient boosting regression models
 
 # 9.License & Contribution Guidelines
 # ALS Progression Prediction Code for PeerJ Submission
