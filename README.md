@@ -110,6 +110,8 @@ df['Cohort'] = le.fit_transform(df['Cohort'])
 
 df['Lenght_Diag_LNA'] = pd.to_numeric(df['Lenght_Diag_LNA'], errors='coerce')
 
+LabelEncoders are used in machine learning to convert categorical (text) labels into numerical values, which are easier for most algorithms to process.
+
 # Calculate the average of non-missing values
 non_missing_avg = df['Lenght_Diag_LNA'].dropna().mean()
 
@@ -195,9 +197,12 @@ for col in columns_to_check:<BR>
     plt.title(f"Boxplot with IQR Outliers for {col}")<BR>
     plt.show()<BR>
 
+An outlier is a data point that is significantly different from the rest of the data. It lies far away from the majority of other values in a dataset.
+Detecting outliers is important because outliers can significantly distort the results of your data analysis or machine learning models.
 Missing values are handled.
 
 # Feature Selection using XGBoost model 
+XGBoost isused for feature selection because it calculates feature importance during training. This tells you which features contribute most to the model’s predictions.
 
 Base-model
 Random Forest Regressor(RF) is used for handling non-linear data,Gradient Boosting Regressor (GB) improves predictions and Support Vector Regressor (SVR) for scaled numerical features.
